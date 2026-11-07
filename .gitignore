@@ -1,0 +1,3 @@
+# Local AI skills and their installation manifest
+.agents/
+skills-lock.json

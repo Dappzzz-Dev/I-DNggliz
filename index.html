@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Daffa's personal portfolio of web projects, photography, software reviews, and notes."
+    >
+    <meta name="theme-color" content="#f7f7f5">
+    <title>Daffa — Student, maker, photographer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="assets/photos/hero-flatlay.jpg">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="#home" aria-label="Daffa, home">D<span>.</span></a>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Open navigation"
+      >
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#reviews">Software review</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero section-wrap" id="home" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Student · Web projects · Photography</p>
+          <h1 id="hero-title">Hi, I’m <span>Daffa.</span></h1>
+          <p class="hero-intro">
+            I’m a college student who enjoys building small web projects and
+            capturing moments with my phone.
+          </p>
+          <blockquote class="hero-quote">“Create an opportunity or take.”</blockquote>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#projects">See my projects</a>
+            <a class="text-link" href="#about">A little about me <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <figure class="hero-image">
+          <img
+            src="assets/photos/hero-flatlay.jpg"
+            alt="A black-and-white still life of a Zenit-E camera resting on a map beside three printed photographs."
+            fetchpriority="high"
+            width="679"
+            height="798"
+          >
+        </figure>
+        <a class="scroll-note" href="#about">Scroll to explore <span aria-hidden="true">↓</span></a>
+      </section>
+
+      <section class="about-section section-wrap section-space" id="about" aria-labelledby="about-title">
+        <div class="section-heading">
+          <p class="eyebrow">A bit about me</p>
+          <h2 id="about-title">Curious by nature,<br>learning as I go.</h2>
+        </div>
+        <div class="about-copy">
+          <p>
+            I’m learning how websites work, from the first sketch to the final
+            details. I like making personal projects because each one gives me
+            something new to try.
+          </p>
+          <p>
+            Away from my screen, I enjoy taking photos, listening to music, and
+            starting random ideas just to see where they lead. I’m still
+            learning, and that is part of the fun.
+          </p>
+          <div class="about-facts">
+            <p><span>Currently</span> Studying and building projects</p>
+            <p><span>For fun</span> Photography and music</p>
+            <p><span>Learning</span> Front-end development</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-gallery section-wrap reveal" id="my-picture" aria-labelledby="my-picture-title">
+        <div class="section-heading section-heading-row">
+          <div>
+            <p class="eyebrow">People and days I remember</p>
+            <h2 id="my-picture-title">My pictures</h2>
+          </div>
+          <p class="section-note">A few moments with friends, classmates, and my school community.</p>
+        </div>
+        <div class="about-photo-grid">
+          <div class="about-photo-column">
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/theatre-cast.jpg" alt="Daffa and the cast after a drama performance" loading="lazy" decoding="async" width="1400" height="788">
+            </figure>
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/stage-pose.jpg" alt="Daffa with the cast during a group photo" loading="lazy" decoding="async" width="1400" height="788">
+            </figure>
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/formal-selfie.jpg" alt="Daffa taking a formal event selfie with friends" loading="lazy" decoding="async" width="1280" height="959">
+            </figure>
+          </div>
+          <div class="about-photo-column">
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/classmates.jpg" alt="Daffa with classmates at a group gathering" loading="lazy" decoding="async" width="1280" height="720">
+            </figure>
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/class-selfie.jpg" alt="Daffa taking a selfie with classmates" loading="lazy" decoding="async" width="720" height="1280">
+            </figure>
+          </div>
+          <div class="about-photo-column">
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/class-project.jpg" alt="Students gathered for a school activity" loading="lazy" decoding="async" width="1280" height="720">
+            </figure>
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/school-event.jpg" alt="Daffa and friends at a school event" loading="lazy" decoding="async" width="1280" height="720">
+            </figure>
+            <figure class="about-photo media-frame">
+              <img src="assets/photos/friends-group.jpg" alt="Daffa with friends at a group gathering" loading="lazy" decoding="async" width="1400" height="788">
+            </figure>
+          </div>
+          <p class="gallery-memory">a moment I’ll never forget</p>
+        </div>
+      </section>
+
+      <section class="work-section section-wrap section-space" id="projects" aria-labelledby="projects-title">
+        <div class="section-heading section-heading-row">
+          <div>
+            <p class="eyebrow">Things I have made</p>
+            <h2 id="projects-title">Selected projects</h2>
+          </div>
+          <a
+            class="text-link"
+            href="https://github.com/Dappzzz-Dev"
+            target="_blank"
+            rel="noopener noreferrer"
+          >More on GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+
+        <div class="project-grid">
+          <article class="project">
+            <a class="project-image media-frame" href="https://pamer-co.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit Pamer.co">
+              <img src="assets/projects/pamer.jpg" alt="Preview of Pamer.co, a personal project portfolio" loading="lazy" decoding="async" width="1100" height="519">
+              <span class="media-fallback" aria-hidden="true">Project preview</span>
+            </a>
+            <div class="project-details">
+              <p class="project-type">Portfolio · 2026</p>
+              <h3>Pamer.co</h3>
+              <p>A pixel-themed portfolio for collecting and sharing personal projects.</p>
+              <p class="technology">Next.js · React · Tailwind CSS</p>
+              <div class="project-links">
+                <a href="https://github.com/Dappzzz-Dev/Pamer.co" target="_blank" rel="noopener noreferrer">Source code ↗</a>
+                <a href="https://pamer-co.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <a class="project-image media-frame" href="https://valentine-blush-eight-30.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit Valentine's Day Greetings Website">
+              <img src="assets/projects/valentine.jpg" alt="Preview of a Valentine's Day greeting website" loading="lazy" decoding="async" width="1100" height="519">
+              <span class="media-fallback" aria-hidden="true">Project preview</span>
+            </a>
+            <div class="project-details">
+              <p class="project-type">Greeting website · 2026</p>
+              <h3>Valentine’s Day Greetings</h3>
+              <p>A small greeting site with playful interactions and a romantic theme.</p>
+              <p class="technology">HTML · CSS · JavaScript</p>
+              <div class="project-links">
+                <a href="https://github.com/Dappzzz-Dev/valentine" target="_blank" rel="noopener noreferrer">Source code ↗</a>
+                <a href="https://valentine-blush-eight-30.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <a class="project-image media-frame" href="https://confession-web-orpin.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit Confession Website">
+              <img src="assets/projects/confession.jpg" alt="Preview of Confession Website" loading="lazy" decoding="async" width="1100" height="519">
+              <span class="media-fallback" aria-hidden="true">Project preview</span>
+            </a>
+            <div class="project-details">
+              <p class="project-type">Interactive website · 2026</p>
+              <h3>Confession Website</h3>
+              <p>A playful web experience with a mini game, animations, and a greeting card.</p>
+              <p class="technology">HTML · CSS · JavaScript · Canvas</p>
+              <div class="project-links">
+                <a href="https://github.com/Dappzzz-Dev/Confession-Web" target="_blank" rel="noopener noreferrer">Source code ↗</a>
+                <a href="https://confession-web-orpin.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <a class="project-image media-frame" href="https://to-do-list-web-umber.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit ToDoList WebApp">
+              <img src="assets/projects/todo.jpg" alt="Preview of the ToDoList WebApp" loading="lazy" decoding="async" width="1100" height="552">
+              <span class="media-fallback" aria-hidden="true">Project preview</span>
+            </a>
+            <div class="project-details">
+              <p class="project-type">Web application · 2025</p>
+              <h3>ToDoList WebApp</h3>
+              <p>A straightforward place to write down tasks and keep track of the day.</p>
+              <p class="technology">React · TypeScript · Vite</p>
+              <div class="project-links">
+                <a href="https://github.com/Dappzzz-Dev/To-do-List-web" target="_blank" rel="noopener noreferrer">Source code ↗</a>
+                <a href="https://to-do-list-web-umber.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="project">
+            <a class="project-image media-frame" href="https://sukospot.my.id" target="_blank" rel="noopener noreferrer" aria-label="Visit SukoSpot">
+              <img src="assets/projects/sukospot.jpg" alt="Preview of SukoSpot, a local food and hangout guide" loading="lazy" decoding="async" width="1100" height="518">
+              <span class="media-fallback" aria-hidden="true">Project preview</span>
+            </a>
+            <div class="project-details">
+              <p class="project-type">Web application · 2025</p>
+              <h3>SukoSpot</h3>
+              <p>A team project for finding places to eat and hang out around Sukoharjo.</p>
+              <p class="technology">Laravel · Inertia.js · SQLite</p>
+              <div class="project-links">
+                <a href="https://sukospot.my.id" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="photo-section section-wrap section-space" id="photography" aria-labelledby="photo-title">
+        <div class="section-heading section-heading-row">
+          <div>
+            <p class="eyebrow">A few things I noticed</p>
+            <h2 id="photo-title">Photo journal</h2>
+          </div>
+          <p class="section-note">This is where I can see that even the smallest things can be eternal.</p>
+        </div>
+        <div class="photo-grid" id="photo-journal">
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-01.jpg" alt="Sunlight breaking through clouds" loading="lazy" decoding="async" width="1100" height="733">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-02.jpg" alt="The sun setting behind a line of trees" loading="lazy" decoding="async" width="1100" height="733">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-03.jpg" alt="Sunset light reflected on the sea" loading="lazy" decoding="async" width="828" height="1100">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-04.jpg" alt="Sunlight across the windows in a quiet room" loading="lazy" decoding="async" width="915" height="1100">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-05.jpg" alt="Pink evening sky above a field" loading="lazy" decoding="async" width="826" height="1100">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-06.jpg" alt="A mountain view softened by fog" loading="lazy" decoding="async" width="825" height="1100">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-07.jpg" alt="Green fields seen through a window" loading="lazy" decoding="async" width="828" height="1100">
+          </figure>
+          <figure class="photo-card media-frame">
+            <img src="assets/photos/journal/journal-08.jpg" alt="Orange sunset over the sea" loading="lazy" decoding="async" width="828" height="1100">
+          </figure>
+        </div>
+      </section>
+
+      <section class="review-section section-wrap section-space" id="reviews" aria-labelledby="reviews-title">
+        <div class="section-heading">
+          <p class="eyebrow">Apps and tools I use</p>
+          <h2 id="reviews-title">Software review</h2>
+          <p class="section-lead">
+            Each tool has a place in how I make things: Zed for building web
+            projects, Instagram for my photos, and TikTok for sharing quick
+            moments from the process.
+          </p>
+        </div>
+        <div class="review-grid">
+          <article class="review">
+            <div class="review-topline"><span>Building projects</span><span>For web development</span></div>
+            <h3>Zed</h3>
+            <p>
+              When I work on a website, I use Zed to edit the HTML, CSS, and
+              JavaScript and keep the project files together. Its uncluttered
+              layout helps me focus on one detail at a time, which is useful
+              while I am still learning how each part fits together.
+            </p>
+            <p class="review-verdict"><strong>My take:</strong> A comfortable place to build and improve my small web projects.</p>
+            <a href="https://zed.dev/" target="_blank" rel="noopener noreferrer">Visit Zed ↗</a>
+          </article>
+          <article class="review">
+            <div class="review-topline"><span>Keeping and sharing photos</span><span>For photography</span></div>
+            <h3>Instagram</h3>
+            <p>
+              Photography is not only about taking a picture; I also want a
+              simple place to collect and share the ones I like. Instagram
+              works well for that, whether I am posting a project or a moment
+              from an ordinary day.
+            </p>
+            <p class="review-verdict"><strong>My take:</strong> A handy visual diary that also lets me share my work.</p>
+            <div class="review-links">
+              <a href="https://www.instagram.com/dafara__/" target="_blank" rel="noopener noreferrer">Work account ↗</a>
+              <a href="https://www.instagram.com/dappaalyn/" target="_blank" rel="noopener noreferrer">Photo account ↗</a>
+            </div>
+          </article>
+          <article class="review">
+            <div class="review-topline"><span>Sharing the process</span><span>For short videos</span></div>
+            <h3>TikTok</h3>
+            <p>
+              A short video can show the small steps behind a project or a
+              photo: an idea, a place, or a moment while I am working. TikTok
+              makes that kind of quick update easy, while my finished projects
+              and photo collection stay in their own places.
+            </p>
+            <p class="review-verdict"><strong>My take:</strong> Useful for sharing quick glimpses of what I make and notice.</p>
+            <a href="https://www.tiktok.com/@dafaraaaa" target="_blank" rel="noopener noreferrer">My TikTok profile ↗</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="blog-section section-wrap section-space" id="blog" aria-labelledby="blog-title">
+        <div class="section-heading">
+          <p class="eyebrow">A short reading note</p>
+          <h2 id="blog-title">A night in the forest</h2>
+          <p class="blog-meta">A response to <cite>A Midsummer Night’s Dream</cite> by William Shakespeare</p>
+        </div>
+        <article class="blog-entry">
+          <p class="blog-opening">
+            My favorite moment is when Oberon finally releases Titania from the
+            spell.
+          </p>
+          <div class="blog-body">
+            <p>
+              In <cite>A Midsummer Night’s Dream</cite>, Oberon and Titania
+              argue over a changeling boy. Oberon asks Puck to use a flower’s
+              juice to make Titania fall in love with the first creature she
+              sees. Puck also changes Bottom’s head into that of a donkey.
+              When Titania wakes, she falls for Bottom.
+            </p>
+            <p>
+              In Act IV, Scene 1, Oberon sees Titania with Bottom and says he
+              has received the boy. He then decides to end the spell: “Now I
+              have the boy. And now I will release her.” I chose this scene
+              because it is funny, but it also shows how Oberon’s jealousy
+              caused a problem he later had to undo.
+            </p>
+            <p>
+              Oberon is the character I remember most. He is confident and
+              clever, but his disagreement with Titania makes him act out of
+              jealousy. Seeing him release her made me think about how his
+              choices affect the other characters.
+            </p>
+          </div>
+          <p class="source-note">
+            <strong>Sources:</strong> Daffa Farash Yulianto, <cite>Drama
+            Observation</cite> (English assignment); William Shakespeare,
+            <cite>A Midsummer Night’s Dream</cite>, Act III, Scene 1 and Act IV,
+            Scene 1 (class text).
+          </p>
+        </article>
+      </section>
+
+      <section class="contact-section section-wrap section-space" id="contact" aria-labelledby="contact-title">
+        <div class="contact-copy">
+          <p class="eyebrow">Say hello</p>
+          <h2 id="contact-title">Let’s keep in touch.</h2>
+          <p>
+            I share projects, everyday moments, and photos on different
+            profiles. Choose the one you would like to visit.
+          </p>
+          <div class="social-links">
+            <a href="https://github.com/Dappzzz-Dev" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>@Dappzzz-Dev ↗</span></a>
+            <a href="https://www.instagram.com/dafara__/" target="_blank" rel="noopener noreferrer"><span>Instagram · Work</span><span>@dafara__ ↗</span></a>
+            <a href="https://www.instagram.com/dappaalyn/" target="_blank" rel="noopener noreferrer"><span>Instagram · Aesthetic</span><span>@dappaalyn ↗</span></a>
+            <a href="https://www.tiktok.com/@dafaraaaa" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@dafaraaaa ↗</span></a>
+            <a href="https://open.spotify.com/user/31zcfkfndeld343iwybqg5csum24?si=129e9f3979cf403e" target="_blank" rel="noopener noreferrer"><span>Spotify</span><span>My profile ↗</span></a>
+          </div>
+        </div>
+        <aside class="snake-game" id="snake-game" data-state="idle" aria-labelledby="snake-game-title">
+          <div>
+            <p class="eyebrow">A tiny pause</p>
+            <h3 id="snake-game-title">A little snake</h3>
+            <p class="snake-game-intro">Collect the dots and avoid the walls and your tail.</p>
+          </div>
+          <div class="snake-game-play">
+            <p class="snake-score" id="snake-score">Score: 0</p>
+            <canvas
+              class="snake-board"
+              id="snake-board"
+              width="320"
+              height="224"
+              tabindex="0"
+              aria-label="Snake game board. Use arrow keys or WASD to move."
+            >Snake game board. Use arrow keys or WASD to move.</canvas>
+            <button
+              class="snake-start"
+              id="snake-start"
+              type="button"
+              aria-describedby="snake-game-status"
+            >Start game</button>
+            <div class="snake-controls" role="group" aria-label="Snake direction controls">
+              <button type="button" data-direction="up" aria-label="Move up">↑</button>
+              <button type="button" data-direction="left" aria-label="Move left">←</button>
+              <button type="button" data-direction="down" aria-label="Move down">↓</button>
+              <button type="button" data-direction="right" aria-label="Move right">→</button>
+            </div>
+            <p class="snake-game-status" id="snake-game-status" role="status" aria-live="polite">
+              Press start, then use arrow keys, WASD, or the buttons.
+            </p>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <aside class="music-widget" aria-label="Floating Spotify player">
+      <div class="music-panel" id="music-panel" hidden>
+        <p class="eyebrow">A song for the page</p>
+        <h2>Listen while you browse</h2>
+          <iframe
+            id="spotify-frame"
+            title="Spotify player for Daffa’s selected song"
+            width="100%"
+            height="152"
+            loading="lazy"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+      </div>
+      <button
+        class="music-toggle"
+        id="music-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="music-panel"
+        aria-label="Open Spotify player"
+      >
+        <span class="music-icon" aria-hidden="true">♫</span>
+        <span id="music-toggle-label">Listen</span>
+      </button>
+    </aside>
+
+    <footer class="site-footer section-wrap">
+      <a class="wordmark" href="#home" aria-label="Back to top">D<span>.</span></a>
+      <p>Made while learning. © <span id="current-year"></span> Daffa</p>
+      <a class="text-link" href="#home">Back to top ↑</a>
+    </footer>
+  </body>
+</html>
