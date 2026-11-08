@@ -113,6 +113,161 @@ siteNav.addEventListener("click", (event) => {
   }
 });
 
+const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let scrollAnimationFrame = 0;
+
+function cancelScrollAnimation() {
+  if (!scrollAnimationFrame) {
+    return;
+  }
+
+  window.cancelAnimationFrame(scrollAnimationFrame);
+  scrollAnimationFrame = 0;
+  document.documentElement.style.scrollBehavior = "";
+}
+
+function getDocumentTop(element) {
+  let top = 0;
+  let node = element;
+
+  while (node) {
+    top += node.offsetTop;
+    node = node.offsetParent;
+  }
+
+  return top;
+}
+
+function focusScrollTarget(target) {
+  if (!target.hasAttribute("tabindex")) {
+    target.setAttribute("tabindex", "-1");
+    target.addEventListener(
+      "blur",
+      () => target.removeAttribute("tabindex"),
+      { once: true },
+    );
+  }
+
+  target.focus({ preventScroll: true });
+}
+
+function smoothScrollTo(target, hash) {
+  cancelScrollAnimation();
+
+  const header = document.querySelector(".site-header");
+  const headerOffset = (header ? header.getBoundingClientRect().height : 0) + 14;
+  const maxScroll = Math.max(
+    0,
+    document.documentElement.scrollHeight - window.innerHeight,
+  );
+  const targetTop =
+    hash === "#home" ? 0 : getDocumentTop(target) - headerOffset;
+  const destination = Math.max(0, Math.min(targetTop, maxScroll));
+  const start = window.scrollY;
+  const distance = destination - start;
+
+  if (reduceMotionQuery.matches || Math.abs(distance) < 2) {
+    window.scrollTo(0, destination);
+    focusScrollTarget(target);
+    return;
+  }
+
+  const duration = Math.min(1800, Math.max(650, Math.abs(distance) * 0.55));
+  const root = document.documentElement;
+  let startTime;
+
+  root.style.scrollBehavior = "auto";
+
+  function step(timestamp) {
+    if (startTime === undefined) {
+      startTime = timestamp;
+    }
+
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    const eased =
+      progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+    window.scrollTo(0, start + distance * eased);
+
+    if (progress < 1) {
+      scrollAnimationFrame = window.requestAnimationFrame(step);
+      return;
+    }
+
+    scrollAnimationFrame = 0;
+    root.style.scrollBehavior = "";
+    focusScrollTarget(target);
+  }
+
+  scrollAnimationFrame = window.requestAnimationFrame(step);
+}
+
+document.addEventListener("click", (event) => {
+  if (event.defaultPrevented || event.button !== 0) {
+    return;
+  }
+
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    return;
+  }
+
+  const link = event.target.closest
+    ? event.target.closest('a[href^="#"]')
+    : null;
+
+  if (!link || link.classList.contains("skip-link")) {
+    return;
+  }
+
+  const hash = link.getAttribute("href");
+
+  if (!hash || hash.length < 2) {
+    return;
+  }
+
+  let target;
+
+  try {
+    target = document.querySelector(hash);
+  } catch (error) {
+    return;
+  }
+
+  if (!target) {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (document.body.classList.contains("menu-open")) {
+    closeMenu();
+  }
+
+  try {
+    window.history.pushState(null, "", hash);
+  } catch (error) {
+    // Some file:// and sandboxed contexts block pushState; scrolling still works.
+  }
+
+  window.requestAnimationFrame(() => smoothScrollTo(target, hash));
+});
+
+["wheel", "touchstart"].forEach((eventName) => {
+  window.addEventListener(eventName, cancelScrollAnimation, { passive: true });
+});
+
+window.addEventListener("keydown", (event) => {
+  if (
+    ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(
+      event.key,
+    )
+  ) {
+    cancelScrollAnimation();
+  }
+});
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeMenu();
@@ -410,11 +565,7 @@ document.querySelectorAll(".media-frame img").forEach((image) => {
   });
 });
 
-if (
-  window.matchMedia("(min-width: 761px) and (prefers-reduced-motion: no-preference)")
-    .matches &&
-  "IntersectionObserver" in window
-) {
+if (!reduceMotionQuery.matches && "IntersectionObserver" in window) {
   const revealObserver = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry) => {
@@ -424,7 +575,7 @@ if (
         }
       });
     },
-    { threshold: 0.12 },
+    { rootMargin: "0px 0px -10% 0px", threshold: 0 },
   );
 
   document.querySelectorAll("main > section:not(.hero), .about-gallery").forEach((section) => {
