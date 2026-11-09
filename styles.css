@@ -162,6 +162,13 @@ h3 {
   color: #444;
 }
 
+.site-nav a.is-active {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
 .site-nav a:hover,
 .text-link:hover,
 .project-links a:hover,
@@ -1130,6 +1137,12 @@ h3 {
     box-shadow: none;
   }
 
+  .site-nav a.is-active {
+    background: rgb(255 255 255 / 55%);
+    box-shadow: inset 3px 0 0 var(--ink);
+    text-decoration: none;
+  }
+
   .hero {
     min-height: auto;
     grid-template-columns: 1fr;
@@ -1293,21 +1306,6 @@ h3 {
     max-width: 120px;
     text-align: center;
   }
-
-  body.motion-ready .reveal {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 360ms ease-out, transform 360ms ease-out;
-  }
-
-  body.motion-ready .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .hero-copy {
-    animation: hero-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
 }
 
 @media (max-width: 760px) {
@@ -1324,25 +1322,91 @@ h3 {
       background: var(--paper);
     }
   }
+
+  /*
+   * Mobile motion lives here, not in the max-width: 520px block, so phones in
+   * landscape and small tablets (521–760px) still get the reveal and hero
+   * entrance. Keeping it at 760px matches the breakpoint where the glass menu
+   * and the hidden hero image switch on.
+   */
+  body.motion-ready .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 360ms ease-out, transform 360ms ease-out;
+  }
+
+  body.motion-ready .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hero-copy {
+    animation: hero-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  html {
     scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 
-  body.motion-ready .reveal,
+  /*
+   * Reduced motion means "less", not "none". Keep a short fade and a
+   * smaller rise so the page still gives feedback, but drop the long
+   * slide, the stagger, and the large hover movement.
+   */
+  body.motion-ready .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 500ms ease-out, transform 500ms ease-out;
+  }
+
+  body.motion-ready .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   body.motion-ready .reveal .project,
   body.motion-ready .reveal .review,
   body.motion-ready .reveal .about-facts p,
   body.motion-ready .reveal .social-links a {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 440ms ease-out, transform 440ms ease-out;
+  }
+
+  body.motion-ready .reveal.is-visible .project,
+  body.motion-ready .reveal.is-visible .review,
+  body.motion-ready .reveal.is-visible .about-facts p,
+  body.motion-ready .reveal.is-visible .social-links a {
     opacity: 1;
-    transform: none;
+    transform: translateY(0);
+  }
+
+  .reveal.is-visible .project:nth-child(2),
+  .reveal.is-visible .review:nth-child(2),
+  .reveal.is-visible .about-facts p:nth-child(2),
+  .reveal.is-visible .social-links a:nth-child(2),
+  .reveal.is-visible .project:nth-child(3),
+  .reveal.is-visible .review:nth-child(3),
+  .reveal.is-visible .about-facts p:nth-child(3),
+  .reveal.is-visible .social-links a:nth-child(3),
+  .reveal.is-visible .project:nth-child(4),
+  .reveal.is-visible .social-links a:nth-child(4),
+  .reveal.is-visible .project:nth-child(5),
+  .reveal.is-visible .social-links a:nth-child(5) {
+    transition-delay: 0ms;
+  }
+
+  .hero-copy > *,
+  .hero-image,
+  .hero-copy {
+    animation-duration: 420ms;
+    animation-delay: 0ms;
+  }
+
+  .music-panel {
+    animation: none;
   }
 
   .project-image:hover img,

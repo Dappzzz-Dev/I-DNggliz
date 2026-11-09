@@ -115,6 +115,7 @@ siteNav.addEventListener("click", (event) => {
 
 const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 let scrollAnimationFrame = 0;
+let scrollAnimationStartedAt = 0;
 
 function cancelScrollAnimation() {
   if (!scrollAnimationFrame) {
@@ -123,6 +124,7 @@ function cancelScrollAnimation() {
 
   window.cancelAnimationFrame(scrollAnimationFrame);
   scrollAnimationFrame = 0;
+  scrollAnimationStartedAt = 0;
   document.documentElement.style.scrollBehavior = "";
 }
 
@@ -165,18 +167,30 @@ function smoothScrollTo(target, hash) {
   const destination = Math.max(0, Math.min(targetTop, maxScroll));
   const start = window.scrollY;
   const distance = destination - start;
+  const root = document.documentElement;
 
-  if (reduceMotionQuery.matches || Math.abs(distance) < 2) {
+  if (Math.abs(distance) < 2) {
+    root.style.scrollBehavior = "auto";
     window.scrollTo(0, destination);
+    root.style.scrollBehavior = "";
     focusScrollTarget(target);
     return;
   }
 
-  const duration = Math.min(1800, Math.max(650, Math.abs(distance) * 0.55));
-  const root = document.documentElement;
+  // Reduced motion still gets a short, gentle glide instead of an instant jump.
+  const duration = reduceMotionQuery.matches
+    ? Math.min(900, Math.max(380, Math.abs(distance) * 0.3))
+    : Math.min(1200, Math.max(560, Math.abs(distance) * 0.5));
   let startTime;
 
   root.style.scrollBehavior = "auto";
+  scrollAnimationStartedAt = performance.now();
+
+  function finishScroll() {
+    scrollAnimationFrame = 0;
+    scrollAnimationStartedAt = 0;
+    root.style.scrollBehavior = "";
+  }
 
   function step(timestamp) {
     if (startTime === undefined) {
@@ -196,8 +210,8 @@ function smoothScrollTo(target, hash) {
       return;
     }
 
-    scrollAnimationFrame = 0;
-    root.style.scrollBehavior = "";
+    window.scrollTo(0, destination);
+    finishScroll();
     focusScrollTarget(target);
   }
 
@@ -254,8 +268,32 @@ document.addEventListener("click", (event) => {
   window.requestAnimationFrame(() => smoothScrollTo(target, hash));
 });
 
-["wheel", "touchstart"].forEach((eventName) => {
-  window.addEventListener(eventName, cancelScrollAnimation, { passive: true });
+/*
+ * Only a deliberate scroll should interrupt a glide. Trackpads keep firing
+ * "wheel" events for their inertia after the fingers lift, and Windows even
+ * sends deltaY: 0 noise. Cancelling on those made a nav click look like it
+ * did nothing, so the page stayed on the previous section (for example,
+ * clicking "Home" from the bottom appeared to go to "Contact"). Ignore the
+ * first moment of the animation and any tiny wheel tick.
+ */
+function handleUserScroll(event) {
+  if (!scrollAnimationFrame) {
+    return;
+  }
+
+  if (performance.now() - scrollAnimationStartedAt < 600) {
+    return;
+  }
+
+  if (event.type === "wheel" && Math.abs(event.deltaY) < 20) {
+    return;
+  }
+
+  cancelScrollAnimation();
+}
+
+["wheel", "touchmove"].forEach((eventName) => {
+  window.addEventListener(eventName, handleUserScroll, { passive: true });
 });
 
 window.addEventListener("keydown", (event) => {
@@ -565,17 +603,20 @@ document.querySelectorAll(".media-frame img").forEach((image) => {
   });
 });
 
-if (!reduceMotionQuery.matches && "IntersectionObserver" in window) {
+if ("IntersectionObserver" in window) {
+  /*
+   * Keep observing instead of unobserving. A section that leaves the viewport
+   * re-arms, so the page keeps animating on every pass instead of playing
+   * only once per page load. Without this, the motion is invisible after the
+   * first scroll and the page feels static.
+   */
   const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
+    (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
     },
-    { rootMargin: "0px 0px -10% 0px", threshold: 0 },
+    { rootMargin: "0px 0px -12% 0px", threshold: 0 },
   );
 
   document.querySelectorAll("main > section:not(.hero), .about-gallery").forEach((section) => {
@@ -585,5 +626,63 @@ if (!reduceMotionQuery.matches && "IntersectionObserver" in window) {
 
   document.body.classList.add("motion-ready");
 }
+
+/*
+ * Mark the nav link for the section sitting under the header. Besides being a
+ * useful cue, it makes it obvious that a jump really did land on the section
+ * that was requested.
+ */
+const navLinks = [...document.querySelectorAll('.site-nav a[href^="#"]')];
+const navSections = navLinks
+  .map((link) => document.querySelector(link.getAttribute("href")))
+  .filter(Boolean);
+let navUpdateFrame = 0;
+
+function updateActiveNav() {
+  navUpdateFrame = 0;
+
+  const header = document.querySelector(".site-header");
+  const offset = (header ? header.getBoundingClientRect().height : 0) + 24;
+  const scrollTop = window.scrollY;
+  let activeId = "";
+
+  navSections.forEach((section) => {
+    /*
+     * Measure from layout (offsetTop) instead of getBoundingClientRect, so the
+     * reveal transform (translateY) does not make a freshly landed section
+     * look like it is still below the header.
+     */
+    const top = getDocumentTop(section) - scrollTop;
+    const bottom = top + section.offsetHeight;
+
+    if (top <= offset && bottom > offset) {
+      activeId = section.id;
+    }
+  });
+
+  navLinks.forEach((link) => {
+    const isActive = link.getAttribute("href") === `#${activeId}`;
+
+    link.classList.toggle("is-active", isActive);
+
+    if (isActive) {
+      link.setAttribute("aria-current", "true");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+function requestNavUpdate() {
+  if (navUpdateFrame) {
+    return;
+  }
+
+  navUpdateFrame = window.requestAnimationFrame(updateActiveNav);
+}
+
+window.addEventListener("scroll", requestNavUpdate, { passive: true });
+window.addEventListener("resize", requestNavUpdate);
+updateActiveNav();
 
 document.querySelector("#current-year").textContent = new Date().getFullYear();
