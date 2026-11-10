@@ -71,7 +71,7 @@ a {
 a:focus-visible,
 button:focus-visible,
 iframe:focus-visible,
-.snake-board:focus-visible {
+.game-board:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 4px;
 }
@@ -222,15 +222,6 @@ h3 {
   margin-bottom: 24px;
   color: #454545;
   font-size: 18px;
-}
-
-.hero-quote {
-  margin: 0 0 32px;
-  padding-left: 15px;
-  border-left: 2px solid var(--ink);
-  font-family: var(--serif);
-  font-size: 19px;
-  font-style: italic;
 }
 
 .hero-actions {
@@ -613,19 +604,18 @@ h3 {
   max-width: 550px;
 }
 
-.snake-game {
+.game-widget {
   display: flex;
   min-height: 100%;
   flex-direction: column;
   align-self: stretch;
-  justify-content: space-between;
-  gap: 36px;
+  gap: 28px;
   padding: clamp(22px, 3vw, 34px);
   border: 1px solid var(--line);
   background: var(--white);
 }
 
-.snake-game h3 {
+.game-widget h3 {
   margin-bottom: 12px;
   font-family: var(--serif);
   font-size: clamp(30px, 3.2vw, 40px);
@@ -633,20 +623,60 @@ h3 {
   line-height: 1.1;
 }
 
-.snake-game-intro {
+.game-intro {
   max-width: 340px;
   margin: 0;
   color: #454545;
   font-size: 14px;
 }
 
-.snake-game-play {
+.game-switch {
+  display: inline-flex;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+}
+
+.game-switch button {
+  min-height: 38px;
+  padding: 6px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.game-switch button + button {
+  border-left: 1px solid var(--line);
+}
+
+.game-switch button:hover {
+  color: var(--ink);
+}
+
+.game-switch button.is-selected {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.game-switch button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.game-panel {
+  margin-top: auto;
+}
+
+.game-play {
   display: grid;
   justify-items: center;
   gap: 12px;
 }
 
-.snake-score {
+.game-score {
   width: min(100%, 320px);
   margin: 0;
   color: var(--muted);
@@ -654,16 +684,23 @@ h3 {
   text-align: left;
 }
 
-.snake-board {
+.game-board {
   display: block;
-  width: min(100%, 320px);
   height: auto;
   border: 1px solid var(--ink);
   background: var(--paper);
   touch-action: none;
 }
 
-.snake-start {
+.snake-board {
+  width: min(100%, 320px);
+}
+
+.tetris-board {
+  width: min(100%, 180px);
+}
+
+.game-start {
   width: min(100%, 320px);
   min-height: 44px;
   border: 1px solid var(--ink);
@@ -674,21 +711,23 @@ h3 {
   transition: background-color 160ms ease, color 160ms ease;
 }
 
-.snake-start:hover {
+.game-start:hover {
   background: var(--white);
   color: var(--ink);
 }
 
-.snake-controls {
+#tetris-score,
+#tetris-start {
+  width: min(100%, 180px);
+}
+
+.game-controls {
   display: grid;
-  grid-template-areas:
-    ". up ."
-    "left down right";
   grid-template-columns: repeat(3, 44px);
   gap: 6px;
 }
 
-.snake-controls button {
+.game-controls button {
   width: 44px;
   height: 40px;
   border: 1px solid var(--line);
@@ -699,8 +738,14 @@ h3 {
   font-size: 19px;
 }
 
-.snake-controls button:hover {
+.game-controls button:hover {
   border-color: var(--ink);
+}
+
+.snake-controls {
+  grid-template-areas:
+    ". up ."
+    "left down right";
 }
 
 .snake-controls button:nth-child(1) {
@@ -719,7 +764,41 @@ h3 {
   grid-area: right;
 }
 
-.snake-game-status {
+.tetris-controls {
+  grid-template-areas:
+    ". rotate ."
+    "left down right"
+    "drop drop drop";
+}
+
+.tetris-controls [data-tetris="left"] {
+  grid-area: left;
+}
+
+.tetris-controls [data-tetris="rotate"] {
+  grid-area: rotate;
+}
+
+.tetris-controls [data-tetris="down"] {
+  grid-area: down;
+}
+
+.tetris-controls [data-tetris="right"] {
+  grid-area: right;
+}
+
+.tetris-controls [data-tetris="drop"] {
+  grid-area: drop;
+}
+
+.tetris-controls .tetris-drop {
+  width: 100%;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.game-status {
   max-width: 320px;
   min-height: 24px;
   margin: 0;
@@ -769,11 +848,14 @@ h3 {
   z-index: 9;
   right: 24px;
   bottom: max(24px, env(safe-area-inset-bottom));
-  width: min(340px, calc(100vw - 32px));
+  width: 48px;
 }
 
 .music-panel {
-  margin-bottom: 12px;
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: min(340px, calc(100vw - 32px));
   padding: 20px;
   border: 1px solid var(--line);
   background: var(--white);
@@ -806,11 +888,14 @@ h3 {
 
 .music-toggle {
   display: flex;
+  width: 48px;
+  min-width: 48px;
   min-height: 48px;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   margin-left: auto;
-  padding: 0 17px;
+  padding: 0;
   border: 1px solid var(--ink);
   background: var(--ink);
   color: var(--white);
@@ -818,6 +903,10 @@ h3 {
   cursor: pointer;
   font: inherit;
   font-size: 13px;
+}
+
+#music-toggle-label {
+  display: none;
 }
 
 .music-toggle:hover {
@@ -882,14 +971,6 @@ h3 {
 
   .hero-copy > :nth-child(3) {
     animation-delay: 170ms;
-  }
-
-  .hero-copy > :nth-child(4) {
-    animation-delay: 240ms;
-  }
-
-  .hero-copy > :nth-child(5) {
-    animation-delay: 310ms;
   }
 
   .hero-image {
@@ -965,14 +1046,9 @@ h3 {
     transform: scale(1.035);
   }
 
-  .text-link span,
   .scroll-note span {
     display: inline-block;
     transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .text-link:hover span {
-    transform: translate(2px, -2px);
   }
 
   .scroll-note:hover span {
@@ -1226,7 +1302,7 @@ h3 {
 
   .music-widget {
     right: 16px;
-    width: min(330px, calc(100vw - 32px));
+    width: 48px;
   }
 }
 
@@ -1286,14 +1362,14 @@ h3 {
   .music-widget {
     right: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
-    width: min(320px, calc(100vw - 24px));
+    width: 48px;
   }
 
   .music-panel {
     padding: 16px;
   }
 
-  .snake-game {
+  .game-widget {
     gap: 26px;
     padding: 22px;
   }
@@ -1413,7 +1489,6 @@ h3 {
   .photo-card:hover img,
   .about-photo:hover img,
   .button:hover,
-  .text-link:hover span,
   .scroll-note:hover span {
     transform: none;
   }

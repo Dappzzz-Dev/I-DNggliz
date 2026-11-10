@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="Daffa's personal portfolio of web projects, photography, software reviews, and notes."
+      content="Web projects, a photo journal, and notes by Daffa Farash Yulianto."
     >
     <meta name="theme-color" content="#f7f7f5">
     <link rel="icon" href="data:,">
-    <title>Daffa — Student, maker, photographer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Daffa Farash Yulianto — Web projects and photography</title>
     <link rel="preload" as="image" href="assets/photos/hero-flatlay.jpg">
-    <link rel="stylesheet" href="styles.css?v=6">
-    <script src="script.js?v=6" defer></script>
+    <link rel="stylesheet" href="styles.css?v=10">
+    <script src="script.js?v=10" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -34,7 +32,7 @@
       <nav class="site-nav" id="site-nav" aria-label="Main navigation">
         <a href="#home">Home</a>
         <a href="#about">About</a>
-        <a href="#reviews">Software review</a>
+        <a href="#reviews">Tools</a>
         <a href="#blog">Blog</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -43,16 +41,15 @@
     <main id="main">
       <section class="hero section-wrap" id="home" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Student · Web projects · Photography</p>
           <h1 id="hero-title">Hi, I’m <span>Daffa.</span></h1>
           <p class="hero-intro">
-            I’m a college student who enjoys building small web projects and
-            capturing moments with my phone.
+            I’m a student who builds websites and takes photos with my phone.
+            The projects below started as excuses to learn React, Next.js, and
+            Laravel.
           </p>
-          <blockquote class="hero-quote">“Create an opportunity or take.”</blockquote>
           <div class="hero-actions">
             <a class="button button-dark" href="#projects">See my projects</a>
-            <a class="text-link" href="#about">A little about me <span aria-hidden="true">↗</span></a>
+            <a class="text-link" href="#about">A little about me</a>
           </div>
         </div>
         <figure class="hero-image">
@@ -69,19 +66,18 @@
 
       <section class="about-section section-wrap section-space" id="about" aria-labelledby="about-title">
         <div class="section-heading">
-          <p class="eyebrow">A bit about me</p>
-          <h2 id="about-title">Curious by nature,<br>learning as I go.</h2>
+          <h2 id="about-title">I learn by building,<br>then rebuilding.</h2>
         </div>
         <div class="about-copy">
           <p>
-            I’m learning how websites work, from the first sketch to the final
-            details. I like making personal projects because each one gives me
-            something new to try.
+            Most of what I know about the web comes from personal projects. I
+            start with a rough idea, build it, then go back and fix what looks
+            wrong. Pamer.co and SukoSpot are the two that taught me the most.
           </p>
           <p>
-            Away from my screen, I enjoy taking photos, listening to music, and
-            starting random ideas just to see where they lead. I’m still
-            learning, and that is part of the fun.
+            Away from the screen, I take photos with my phone and listen to
+            music. Some ideas stay as notes; the ones that survive end up on
+            this page.
           </p>
           <div class="about-facts">
             <p><span>Currently</span> Studying and building projects</p>
@@ -97,7 +93,7 @@
             <p class="eyebrow">People and days I remember</p>
             <h2 id="my-picture-title">My pictures</h2>
           </div>
-          <p class="section-note">A few moments with friends, classmates, and my school community.</p>
+          <p class="section-note">Mostly school events and class gatherings, plus a drama performance I still think about.</p>
         </div>
         <div class="about-photo-grid">
           <div class="about-photo-column">
@@ -137,7 +133,6 @@
       <section class="work-section section-wrap section-space" id="projects" aria-labelledby="projects-title">
         <div class="section-heading section-heading-row">
           <div>
-            <p class="eyebrow">Things I have made</p>
             <h2 id="projects-title">Selected projects</h2>
           </div>
           <a
@@ -145,7 +140,7 @@
             href="https://github.com/Dappzzz-Dev"
             target="_blank"
             rel="noopener noreferrer"
-          >More on GitHub <span aria-hidden="true">↗</span></a>
+          >More on GitHub</a>
         </div>
 
         <div class="project-grid">
@@ -155,13 +150,13 @@
               <span class="media-fallback" aria-hidden="true">Project preview</span>
             </a>
             <div class="project-details">
-              <p class="project-type">Portfolio · 2026</p>
+              <p class="project-type">Portfolio, 2026</p>
               <h3>Pamer.co</h3>
-              <p>A pixel-themed portfolio for collecting and sharing personal projects.</p>
+              <p>A showcase site with a dashboard for adding, editing, and deleting projects. Supabase stores the data.</p>
               <p class="technology">Next.js · React · Tailwind CSS</p>
               <div class="project-links">
-                <a href="https://github.com/Dappzzz-Dev/Pamer.co" target="_blank" rel="noopener noreferrer">Source code ↗</a>
-                <a href="https://pamer-co.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+                <a href="https://github.com/Dappzzz-Dev/Pamer.co" target="_blank" rel="noopener noreferrer">Source code</a>
+                <a href="https://pamer-co.vercel.app/" target="_blank" rel="noopener noreferrer">Live site</a>
               </div>
             </div>
           </article>
@@ -172,13 +167,13 @@
               <span class="media-fallback" aria-hidden="true">Project preview</span>
             </a>
             <div class="project-details">
-              <p class="project-type">Greeting website · 2026</p>
+              <p class="project-type">Greeting website, 2026</p>
               <h3>Valentine’s Day Greetings</h3>
-              <p>A small greeting site with playful interactions and a romantic theme.</p>
+              <p>Five screens, including a memory game, an envelope to open, and a gift at the end.</p>
               <p class="technology">HTML · CSS · JavaScript</p>
               <div class="project-links">
-                <a href="https://github.com/Dappzzz-Dev/valentine" target="_blank" rel="noopener noreferrer">Source code ↗</a>
-                <a href="https://valentine-blush-eight-30.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+                <a href="https://github.com/Dappzzz-Dev/valentine" target="_blank" rel="noopener noreferrer">Source code</a>
+                <a href="https://valentine-blush-eight-30.vercel.app/" target="_blank" rel="noopener noreferrer">Live site</a>
               </div>
             </div>
           </article>
@@ -189,13 +184,13 @@
               <span class="media-fallback" aria-hidden="true">Project preview</span>
             </a>
             <div class="project-details">
-              <p class="project-type">Interactive website · 2026</p>
+              <p class="project-type">Interactive website, 2026</p>
               <h3>Confession Website</h3>
-              <p>A playful web experience with a mini game, animations, and a greeting card.</p>
+              <p>Four screens with a slot machine, a “No” button that moves away, and a 3D card at the end.</p>
               <p class="technology">HTML · CSS · JavaScript · Canvas</p>
               <div class="project-links">
-                <a href="https://github.com/Dappzzz-Dev/Confession-Web" target="_blank" rel="noopener noreferrer">Source code ↗</a>
-                <a href="https://confession-web-orpin.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+                <a href="https://github.com/Dappzzz-Dev/Confession-Web" target="_blank" rel="noopener noreferrer">Source code</a>
+                <a href="https://confession-web-orpin.vercel.app/" target="_blank" rel="noopener noreferrer">Live site</a>
               </div>
             </div>
           </article>
@@ -206,13 +201,13 @@
               <span class="media-fallback" aria-hidden="true">Project preview</span>
             </a>
             <div class="project-details">
-              <p class="project-type">Web application · 2025</p>
+              <p class="project-type">Web application, 2025</p>
               <h3>ToDoList WebApp</h3>
-              <p>A straightforward place to write down tasks and keep track of the day.</p>
+              <p>A to-do list that saves in the browser, with filters, search, and a progress count.</p>
               <p class="technology">React · TypeScript · Vite</p>
               <div class="project-links">
-                <a href="https://github.com/Dappzzz-Dev/To-do-List-web" target="_blank" rel="noopener noreferrer">Source code ↗</a>
-                <a href="https://to-do-list-web-umber.vercel.app/" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+                <a href="https://github.com/Dappzzz-Dev/To-do-List-web" target="_blank" rel="noopener noreferrer">Source code</a>
+                <a href="https://to-do-list-web-umber.vercel.app/" target="_blank" rel="noopener noreferrer">Live site</a>
               </div>
             </div>
           </article>
@@ -223,12 +218,12 @@
               <span class="media-fallback" aria-hidden="true">Project preview</span>
             </a>
             <div class="project-details">
-              <p class="project-type">Web application · 2025</p>
+              <p class="project-type">Web application, 2025</p>
               <h3>SukoSpot</h3>
-              <p>A team project for finding places to eat and hang out around Sukoharjo.</p>
+              <p>A team project that maps places to eat and hang out around Sukoharjo.</p>
               <p class="technology">Laravel · Inertia.js · SQLite</p>
               <div class="project-links">
-                <a href="https://sukospot.my.id" target="_blank" rel="noopener noreferrer">Live site ↗</a>
+                <a href="https://sukospot.my.id" target="_blank" rel="noopener noreferrer">Live site</a>
               </div>
             </div>
           </article>
@@ -241,7 +236,7 @@
             <p class="eyebrow">A few things I noticed</p>
             <h2 id="photo-title">Photo journal</h2>
           </div>
-          <p class="section-note">This is where I can see that even the smallest things can be eternal.</p>
+          <p class="section-note">Sky, sea, and trees, mostly. All from the same phone.</p>
         </div>
         <div class="photo-grid" id="photo-journal">
           <figure class="photo-card media-frame">
@@ -273,12 +268,10 @@
 
       <section class="review-section section-wrap section-space" id="reviews" aria-labelledby="reviews-title">
         <div class="section-heading">
-          <p class="eyebrow">Apps and tools I use</p>
-          <h2 id="reviews-title">Software review</h2>
+          <h2 id="reviews-title">Tools I use</h2>
           <p class="section-lead">
-            Each tool has a place in how I make things: Zed for building web
-            projects, Instagram for my photos, and TikTok for sharing quick
-            moments from the process.
+            I write code in Zed, keep photos on Instagram, and post short videos
+            on TikTok.
           </p>
         </div>
         <div class="review-grid">
@@ -291,35 +284,31 @@
               layout helps me focus on one detail at a time, which is useful
               while I am still learning how each part fits together.
             </p>
-            <p class="review-verdict"><strong>My take:</strong> A comfortable place to build and improve my small web projects.</p>
-            <a href="https://zed.dev/" target="_blank" rel="noopener noreferrer">Visit Zed ↗</a>
+            <p class="review-verdict"><strong>My take:</strong> It stays out of the way while I work.</p>
+            <a href="https://zed.dev/" target="_blank" rel="noopener noreferrer">Visit Zed</a>
           </article>
           <article class="review">
             <div class="review-topline"><span>Keeping and sharing photos</span><span>For photography</span></div>
             <h3>Instagram</h3>
             <p>
-              Photography is not only about taking a picture; I also want a
-              simple place to collect and share the ones I like. Instagram
-              works well for that, whether I am posting a project or a moment
-              from an ordinary day.
+              I use Instagram to keep the photos I like in one place. Some are
+              from projects, most are from ordinary days.
             </p>
-            <p class="review-verdict"><strong>My take:</strong> A handy visual diary that also lets me share my work.</p>
+            <p class="review-verdict"><strong>My take:</strong> A visual diary I actually keep updated.</p>
             <div class="review-links">
-              <a href="https://www.instagram.com/dafara__/" target="_blank" rel="noopener noreferrer">Work account ↗</a>
-              <a href="https://www.instagram.com/dappaalyn/" target="_blank" rel="noopener noreferrer">Photo account ↗</a>
+              <a href="https://www.instagram.com/dafara__/" target="_blank" rel="noopener noreferrer">Work account</a>
+              <a href="https://www.instagram.com/dappaalyn/" target="_blank" rel="noopener noreferrer">Photo account</a>
             </div>
           </article>
           <article class="review">
             <div class="review-topline"><span>Sharing the process</span><span>For short videos</span></div>
             <h3>TikTok</h3>
             <p>
-              A short video can show the small steps behind a project or a
-              photo: an idea, a place, or a moment while I am working. TikTok
-              makes that kind of quick update easy, while my finished projects
-              and photo collection stay in their own places.
+              I post short videos of projects in progress and places I stop at.
+              They are rougher than the photos, which is the point.
             </p>
-            <p class="review-verdict"><strong>My take:</strong> Useful for sharing quick glimpses of what I make and notice.</p>
-            <a href="https://www.tiktok.com/@dafaraaaa" target="_blank" rel="noopener noreferrer">My TikTok profile ↗</a>
+            <p class="review-verdict"><strong>My take:</strong> Where the unfinished stuff goes.</p>
+            <a href="https://www.tiktok.com/@dafaraaaa" target="_blank" rel="noopener noreferrer">My TikTok profile</a>
           </article>
         </div>
       </section>
@@ -368,51 +357,87 @@
 
       <section class="contact-section section-wrap section-space" id="contact" aria-labelledby="contact-title">
         <div class="contact-copy">
-          <p class="eyebrow">Say hello</p>
-          <h2 id="contact-title">Let’s keep in touch.</h2>
+          <h2 id="contact-title">Find me elsewhere.</h2>
           <p>
-            I share projects, everyday moments, and photos on different
-            profiles. Choose the one you would like to visit.
+            The code lives on GitHub. Photos and short videos are on Instagram
+            and TikTok.
           </p>
           <div class="social-links">
-            <a href="https://github.com/Dappzzz-Dev" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>@Dappzzz-Dev ↗</span></a>
-            <a href="https://www.instagram.com/dafara__/" target="_blank" rel="noopener noreferrer"><span>Instagram · Work</span><span>@dafara__ ↗</span></a>
-            <a href="https://www.instagram.com/dappaalyn/" target="_blank" rel="noopener noreferrer"><span>Instagram · Aesthetic</span><span>@dappaalyn ↗</span></a>
-            <a href="https://www.tiktok.com/@dafaraaaa" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@dafaraaaa ↗</span></a>
-            <a href="https://open.spotify.com/user/31zcfkfndeld343iwybqg5csum24?si=129e9f3979cf403e" target="_blank" rel="noopener noreferrer"><span>Spotify</span><span>My profile ↗</span></a>
+            <a href="https://github.com/Dappzzz-Dev" target="_blank" rel="noopener noreferrer"><span>GitHub</span><span>@Dappzzz-Dev</span></a>
+            <a href="https://www.instagram.com/dafara__/" target="_blank" rel="noopener noreferrer"><span>Instagram (work)</span><span>@dafara__</span></a>
+            <a href="https://www.instagram.com/dappaalyn/" target="_blank" rel="noopener noreferrer"><span>Instagram (photos)</span><span>@dappaalyn</span></a>
+            <a href="https://www.tiktok.com/@dafaraaaa" target="_blank" rel="noopener noreferrer"><span>TikTok</span><span>@dafaraaaa</span></a>
+            <a href="https://open.spotify.com/user/31zcfkfndeld343iwybqg5csum24?si=129e9f3979cf403e" target="_blank" rel="noopener noreferrer"><span>Spotify</span><span>My profile</span></a>
           </div>
         </div>
-        <aside class="snake-game" id="snake-game" data-state="idle" aria-labelledby="snake-game-title">
-          <div>
+        <aside class="game-widget" id="playground" data-game="snake" data-state="idle" aria-labelledby="playground-title">
+          <div class="game-header">
             <p class="eyebrow">A tiny pause</p>
-            <h3 id="snake-game-title">A little snake</h3>
-            <p class="snake-game-intro">Collect the dots and avoid the walls and your tail.</p>
-          </div>
-          <div class="snake-game-play">
-            <p class="snake-score" id="snake-score">Score: 0</p>
-            <canvas
-              class="snake-board"
-              id="snake-board"
-              width="320"
-              height="224"
-              tabindex="0"
-              aria-label="Snake game board. Use arrow keys or WASD to move."
-            >Snake game board. Use arrow keys or WASD to move.</canvas>
-            <button
-              class="snake-start"
-              id="snake-start"
-              type="button"
-              aria-describedby="snake-game-status"
-            >Start game</button>
-            <div class="snake-controls" role="group" aria-label="Snake direction controls">
-              <button type="button" data-direction="up" aria-label="Move up">↑</button>
-              <button type="button" data-direction="left" aria-label="Move left">←</button>
-              <button type="button" data-direction="down" aria-label="Move down">↓</button>
-              <button type="button" data-direction="right" aria-label="Move right">→</button>
+            <h3 id="playground-title">Two small games</h3>
+            <p class="game-intro">Pick one and take a short break.</p>
+            <div class="game-switch" role="group" aria-label="Choose a game">
+              <button type="button" class="is-selected" data-game-choice="snake" aria-pressed="true">Snake</button>
+              <button type="button" data-game-choice="tetris" aria-pressed="false">Tetris</button>
             </div>
-            <p class="snake-game-status" id="snake-game-status" role="status" aria-live="polite">
-              Press start, then use arrow keys, WASD, or the buttons.
-            </p>
+          </div>
+
+          <div class="game-panel" data-game-panel="snake">
+            <div class="game-play">
+              <p class="game-score" id="snake-score">Score: 0</p>
+              <canvas
+                class="game-board snake-board"
+                id="snake-board"
+                width="320"
+                height="224"
+                tabindex="0"
+                aria-label="Snake game board. Use arrow keys or WASD to move."
+              >Snake game board. Use arrow keys or WASD to move.</canvas>
+              <button
+                class="game-start"
+                id="snake-start"
+                type="button"
+                aria-describedby="snake-game-status"
+              >Start game</button>
+              <div class="game-controls snake-controls" role="group" aria-label="Snake direction controls">
+                <button type="button" data-direction="up" aria-label="Move up">↑</button>
+                <button type="button" data-direction="left" aria-label="Move left">←</button>
+                <button type="button" data-direction="down" aria-label="Move down">↓</button>
+                <button type="button" data-direction="right" aria-label="Move right">→</button>
+              </div>
+              <p class="game-status" id="snake-game-status" role="status" aria-live="polite">
+                Press start, then use arrow keys, WASD, or the buttons.
+              </p>
+            </div>
+          </div>
+
+          <div class="game-panel" data-game-panel="tetris" hidden>
+            <div class="game-play">
+              <p class="game-score" id="tetris-score">Score: 0 / Lines: 0</p>
+              <canvas
+                class="game-board tetris-board"
+                id="tetris-board"
+                width="180"
+                height="360"
+                tabindex="0"
+                aria-label="Tetris game board. Use arrow keys to move and rotate, and space to drop."
+              >Tetris game board. Use arrow keys to move and rotate, and space to drop.</canvas>
+              <button
+                class="game-start"
+                id="tetris-start"
+                type="button"
+                aria-describedby="tetris-status"
+              >Start game</button>
+              <div class="game-controls tetris-controls" role="group" aria-label="Tetris controls">
+                <button type="button" data-tetris="left" aria-label="Move left">←</button>
+                <button type="button" data-tetris="rotate" aria-label="Rotate piece">↻</button>
+                <button type="button" data-tetris="down" aria-label="Soft drop">↓</button>
+                <button type="button" data-tetris="right" aria-label="Move right">→</button>
+                <button type="button" data-tetris="drop" class="tetris-drop" aria-label="Hard drop">Drop</button>
+              </div>
+              <p class="game-status" id="tetris-status" role="status" aria-live="polite">
+                Press start, then use arrow keys to move and rotate.
+              </p>
+            </div>
           </div>
         </aside>
       </section>
@@ -422,15 +447,15 @@
       <div class="music-panel" id="music-panel" hidden>
         <p class="eyebrow">A song for the page</p>
         <h2>Listen while you browse</h2>
-          <iframe
-            id="spotify-frame"
-            title="Spotify player for Daffa’s selected song"
-            width="100%"
-            height="152"
-            loading="lazy"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            referrerpolicy="strict-origin-when-cross-origin"
-          ></iframe>
+        <iframe
+          id="spotify-frame"
+          title="Spotify player for Daffa’s selected song"
+          width="100%"
+          height="152"
+          loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
       </div>
       <button
         class="music-toggle"

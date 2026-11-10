@@ -313,11 +313,22 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function closeMusicPlayer() {
+let musicOpenedAt = 0;
+
+/*
+ * Hide the panel without unloading the iframe. The panel is fixed above the
+ * game controls, so while it is open it sits on top of them; collapsing keeps
+ * the track playing and leaves the compact toggle free to reopen it.
+ */
+function collapseMusicPlayer() {
   musicToggle.setAttribute("aria-expanded", "false");
-  musicToggle.setAttribute("aria-label", "Open Spotify player");
+  musicToggle.setAttribute("aria-label", "Show Spotify player");
   musicToggleLabel.textContent = "Listen";
   musicPanel.hidden = true;
+}
+
+function closeMusicPlayer() {
+  collapseMusicPlayer();
   spotifyFrame.removeAttribute("src");
 }
 
@@ -333,10 +344,73 @@ musicToggle.addEventListener("click", () => {
   musicToggle.setAttribute("aria-label", "Close Spotify player");
   musicToggleLabel.textContent = "Close";
   musicPanel.hidden = false;
-  spotifyFrame.src = spotifyTrack;
+  musicOpenedAt = Date.now();
+
+  if (!spotifyFrame.getAttribute("src")) {
+    spotifyFrame.src = spotifyTrack;
+  }
 });
 
-const snakeGame = document.querySelector("#snake-game");
+const gameWidget = document.querySelector("#playground");
+const gameSwitchButtons = document.querySelectorAll("[data-game-choice]");
+const gamePanels = document.querySelectorAll("[data-game-panel]");
+let activeGame = "snake";
+
+/*
+ * The music player is fixed in the bottom-right corner, so an open panel can
+ * cover the game board or its controls. Yield to the game: any interaction
+ * inside the widget collapses the panel (audio keeps playing), and scrolling
+ * the widget under an open panel collapses it as well.
+ */
+function collapseMusicForGame() {
+  if (musicToggle.getAttribute("aria-expanded") === "true") {
+    collapseMusicPlayer();
+  }
+}
+
+gameWidget.addEventListener("pointerdown", collapseMusicForGame, true);
+gameWidget.addEventListener("focusin", collapseMusicForGame);
+
+function collapseMusicOverGame() {
+  if (musicPanel.hidden || Date.now() - musicOpenedAt < 250) {
+    return;
+  }
+
+  const panelRect = musicPanel.getBoundingClientRect();
+  const gameRect = gameWidget.getBoundingClientRect();
+  const overlaps =
+    panelRect.left < gameRect.right &&
+    panelRect.right > gameRect.left &&
+    panelRect.top < gameRect.bottom &&
+    panelRect.bottom > gameRect.top;
+
+  if (overlaps) {
+    collapseMusicPlayer();
+  }
+}
+
+window.addEventListener("scroll", collapseMusicOverGame, { passive: true });
+window.addEventListener("resize", collapseMusicOverGame);
+
+// Clicking anywhere outside the player dismisses the panel, so it can never
+// trap the page or keep covering a control the visitor wants to press.
+document.addEventListener(
+  "pointerdown",
+  (event) => {
+    if (musicPanel.hidden) {
+      return;
+    }
+
+    if (event.target.closest && event.target.closest(".music-widget")) {
+      return;
+    }
+
+    collapseMusicPlayer();
+  },
+  true,
+);
+
+/* ---------- Snake ---------- */
 const snakeBoard = document.querySelector("#snake-board");
 const snakeContext = snakeBoard.getContext("2d");
 const snakeStart = document.querySelector("#snake-start");
@@ -345,13 +419,60 @@ const snakeStatus = document.querySelector("#snake-game-status");
 const snakeDirectionButtons = document.querySelectorAll("[data-direction]");
 const snakeColumns = snakeBoard.width / 16;
 const snakeRows = snakeBoard.height / 16;
+const snakeDirections = {
+  up: { x: 0, y: -1 },
+  down: { x: 0, y: 1 },
+  left: { x: -1, y: 0 },
+  right: { x: 1, y: 0 },
+};
 let snake = [];
 let snakeFood;
-let snakeDirection;
-let nextSnakeDirection;
+let snakeDirection = snakeDirections.right;
+let nextSnakeDirection = snakeDirections.right;
 let snakePoints = 0;
 let snakeTimer;
 let snakeState = "idle";
+
+/* ---------- Tetris ---------- */
+const tetrisBoard = document.querySelector("#tetris-board");
+const tetrisContext = tetrisBoard.getContext("2d");
+const tetrisStart = document.querySelector("#tetris-start");
+const tetrisScore = document.querySelector("#tetris-score");
+const tetrisStatus = document.querySelector("#tetris-status");
+const tetrisButtons = document.querySelectorAll("[data-tetris]");
+const tetrisCell = 18;
+const tetrisColumns = 10;
+const tetrisRows = 20;
+const tetrisShapes = {
+  I: [[1, 1, 1, 1]],
+  J: [[1, 0, 0], [1, 1, 1]],
+  L: [[0, 0, 1], [1, 1, 1]],
+  O: [[1, 1], [1, 1]],
+  S: [[0, 1, 1], [1, 1, 0]],
+  T: [[0, 1, 0], [1, 1, 1]],
+  Z: [[1, 1, 0], [0, 1, 1]],
+};
+const tetrisColors = {
+  I: "#171717",
+  J: "#2f2f2f",
+  L: "#474747",
+  O: "#5f5f5f",
+  S: "#777777",
+  T: "#8f8f8f",
+  Z: "#a5a5a1",
+};
+let tetrisGrid = createTetrisGrid();
+let tetrisPiece = null;
+let tetrisBag = [];
+let tetrisScoreValue = 0;
+let tetrisLines = 0;
+let tetrisLevel = 1;
+let tetrisTimer;
+let tetrisState = "idle";
+
+function reflectGameState() {
+  gameWidget.dataset.state = activeGame === "snake" ? snakeState : tetrisState;
+}
 
 function drawSnakeBoard() {
   const cellSize = 16;
@@ -410,38 +531,70 @@ function placeSnakeFood() {
   snakeFood = emptyCells[Math.floor(Math.random() * emptyCells.length)];
 }
 
-function startSnakeGame() {
+function stopSnakeTimer() {
   window.clearInterval(snakeTimer);
+  snakeTimer = undefined;
+}
+
+function startSnakeGame() {
+  stopSnakeTimer();
   snake = [
     { x: 10, y: 7 },
     { x: 9, y: 7 },
     { x: 8, y: 7 },
   ];
-  snakeDirection = { x: 1, y: 0 };
+  snakeDirection = snakeDirections.right;
   nextSnakeDirection = snakeDirection;
   snakePoints = 0;
   snakeScore.textContent = `Score: ${snakePoints}`;
   snakeState = "playing";
-  snakeGame.dataset.state = snakeState;
   snakeStart.textContent = "Restart game";
   snakeStatus.textContent = "Use arrow keys, WASD, or the buttons to move.";
   placeSnakeFood();
   drawSnakeBoard();
   snakeTimer = window.setInterval(moveSnake, 140);
+  reflectGameState();
 }
 
 function finishSnakeGame(won = false) {
-  window.clearInterval(snakeTimer);
-  snakeTimer = undefined;
+  stopSnakeTimer();
   snakeState = won ? "won" : "over";
-  snakeGame.dataset.state = snakeState;
   snakeStart.textContent = "Play again";
   snakeStatus.textContent = won
     ? `You filled the board! Final score: ${snakePoints}.`
     : `Game over. Final score: ${snakePoints}.`;
+  reflectGameState();
+}
+
+function pauseSnakeGame() {
+  if (snakeState !== "playing") {
+    return;
+  }
+
+  stopSnakeTimer();
+  snakeState = "paused";
+  snakeStart.textContent = "Resume";
+  snakeStatus.textContent = "Paused. Press resume to keep playing.";
+  reflectGameState();
+}
+
+function resumeSnakeGame() {
+  if (snakeState !== "paused") {
+    return;
+  }
+
+  snakeState = "playing";
+  snakeStart.textContent = "Restart game";
+  snakeStatus.textContent = "Use arrow keys, WASD, or the buttons to move.";
+  snakeTimer = window.setInterval(moveSnake, 140);
+  reflectGameState();
 }
 
 function moveSnake() {
+  if (snakeState !== "playing" || !snakeFood) {
+    return;
+  }
+
   snakeDirection = nextSnakeDirection;
   const head = {
     x: snake[0].x + snakeDirection.x,
@@ -482,52 +635,513 @@ function setSnakeDirection(directionName) {
     return;
   }
 
-  const directions = {
-    up: { x: 0, y: -1 },
-    down: { x: 0, y: 1 },
-    left: { x: -1, y: 0 },
-    right: { x: 1, y: 0 },
-  };
-  const direction = directions[directionName];
+  const direction = snakeDirections[directionName];
+
+  if (!direction) {
+    return;
+  }
 
   if (direction.x + snakeDirection.x !== 0 || direction.y + snakeDirection.y !== 0) {
     nextSnakeDirection = direction;
   }
 }
 
-snakeStart.addEventListener("click", () => {
-  startSnakeGame();
-  snakeBoard.focus();
-});
+/* ---------- Tetris logic ---------- */
+function createTetrisGrid() {
+  return Array.from({ length: tetrisRows }, () => Array(tetrisColumns).fill(null));
+}
 
-snakeBoard.addEventListener("keydown", (event) => {
-  const keyDirections = {
-    ArrowUp: "up",
-    w: "up",
-    W: "up",
-    ArrowDown: "down",
-    s: "down",
-    S: "down",
-    ArrowLeft: "left",
-    a: "left",
-    A: "left",
-    ArrowRight: "right",
-    d: "right",
-    D: "right",
-  };
-  const direction = keyDirections[event.key];
+function updateTetrisScore() {
+  tetrisScore.textContent = `Score: ${tetrisScoreValue} / Lines: ${tetrisLines}`;
+}
 
-  if (direction) {
-    event.preventDefault();
-    setSnakeDirection(direction);
+function takeTetrisType() {
+  if (tetrisBag.length === 0) {
+    tetrisBag = Object.keys(tetrisShapes);
+
+    for (let index = tetrisBag.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [tetrisBag[index], tetrisBag[swapIndex]] = [tetrisBag[swapIndex], tetrisBag[index]];
+    }
   }
+
+  return tetrisBag.pop();
+}
+
+function tetrisCollides(matrix, offsetX, offsetY) {
+  for (let y = 0; y < matrix.length; y += 1) {
+    for (let x = 0; x < matrix[y].length; x += 1) {
+      if (!matrix[y][x]) {
+        continue;
+      }
+
+      const boardX = offsetX + x;
+      const boardY = offsetY + y;
+
+      if (boardX < 0 || boardX >= tetrisColumns || boardY >= tetrisRows) {
+        return true;
+      }
+
+      if (boardY >= 0 && tetrisGrid[boardY][boardX]) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function spawnTetrisPiece() {
+  const type = takeTetrisType();
+  const matrix = tetrisShapes[type].map((row) => [...row]);
+  const piece = {
+    type,
+    matrix,
+    x: Math.floor((tetrisColumns - matrix[0].length) / 2),
+    y: 0,
+  };
+
+  if (tetrisCollides(piece.matrix, piece.x, piece.y)) {
+    tetrisPiece = null;
+    finishTetrisGame();
+    return false;
+  }
+
+  tetrisPiece = piece;
+  return true;
+}
+
+function drawTetrisCell(x, y, color) {
+  const left = x * tetrisCell;
+  const top = y * tetrisCell;
+  tetrisContext.fillStyle = color;
+  tetrisContext.fillRect(left + 1, top + 1, tetrisCell - 2, tetrisCell - 2);
+  tetrisContext.strokeStyle = "#171717";
+  tetrisContext.lineWidth = 1;
+  tetrisContext.strokeRect(left + 1.5, top + 1.5, tetrisCell - 3, tetrisCell - 3);
+}
+
+function drawTetrisBoard() {
+  tetrisContext.fillStyle = "#f7f7f5";
+  tetrisContext.fillRect(0, 0, tetrisBoard.width, tetrisBoard.height);
+  tetrisContext.strokeStyle = "#e5e5e1";
+  tetrisContext.lineWidth = 1;
+
+  for (let x = tetrisCell; x < tetrisBoard.width; x += tetrisCell) {
+    tetrisContext.beginPath();
+    tetrisContext.moveTo(x, 0);
+    tetrisContext.lineTo(x, tetrisBoard.height);
+    tetrisContext.stroke();
+  }
+
+  for (let y = tetrisCell; y < tetrisBoard.height; y += tetrisCell) {
+    tetrisContext.beginPath();
+    tetrisContext.moveTo(0, y);
+    tetrisContext.lineTo(tetrisBoard.width, y);
+    tetrisContext.stroke();
+  }
+
+  for (let y = 0; y < tetrisRows; y += 1) {
+    for (let x = 0; x < tetrisColumns; x += 1) {
+      if (tetrisGrid[y][x]) {
+        drawTetrisCell(x, y, tetrisGrid[y][x]);
+      }
+    }
+  }
+
+  if (tetrisPiece) {
+    const { matrix, x: pieceX, y: pieceY, type } = tetrisPiece;
+
+    for (let y = 0; y < matrix.length; y += 1) {
+      for (let x = 0; x < matrix[y].length; x += 1) {
+        if (matrix[y][x] && pieceY + y >= 0) {
+          drawTetrisCell(pieceX + x, pieceY + y, tetrisColors[type]);
+        }
+      }
+    }
+  }
+}
+
+function clearTetrisLines() {
+  const remaining = tetrisGrid.filter((row) => !row.every(Boolean));
+  const cleared = tetrisRows - remaining.length;
+
+  while (remaining.length < tetrisRows) {
+    remaining.unshift(Array(tetrisColumns).fill(null));
+  }
+
+  tetrisGrid = remaining;
+  return cleared;
+}
+
+function lockTetrisPiece() {
+  if (!tetrisPiece) {
+    return;
+  }
+
+  const { matrix, x: pieceX, y: pieceY, type } = tetrisPiece;
+
+  for (let y = 0; y < matrix.length; y += 1) {
+    for (let x = 0; x < matrix[y].length; x += 1) {
+      if (matrix[y][x] && pieceY + y >= 0) {
+        tetrisGrid[pieceY + y][pieceX + x] = tetrisColors[type];
+      }
+    }
+  }
+
+  const cleared = clearTetrisLines();
+  tetrisPiece = null;
+
+  if (cleared > 0) {
+    tetrisScoreValue += [0, 100, 300, 500, 800][cleared] * tetrisLevel;
+    tetrisLines += cleared;
+    tetrisLevel = Math.floor(tetrisLines / 10) + 1;
+    updateTetrisScore();
+  }
+
+  spawnTetrisPiece();
+}
+
+function moveTetris(dx, dy) {
+  if (tetrisState !== "playing" || !tetrisPiece) {
+    return;
+  }
+
+  if (tetrisCollides(tetrisPiece.matrix, tetrisPiece.x + dx, tetrisPiece.y + dy)) {
+    return;
+  }
+
+  tetrisPiece.x += dx;
+  tetrisPiece.y += dy;
+  drawTetrisBoard();
+}
+
+function moveTetrisDown(manual = false) {
+  if (tetrisState !== "playing" || !tetrisPiece) {
+    return;
+  }
+
+  if (tetrisCollides(tetrisPiece.matrix, tetrisPiece.x, tetrisPiece.y + 1)) {
+    lockTetrisPiece();
+    drawTetrisBoard();
+    return;
+  }
+
+  tetrisPiece.y += 1;
+
+  if (manual) {
+    tetrisScoreValue += 1;
+    updateTetrisScore();
+  }
+
+  drawTetrisBoard();
+}
+
+function rotateTetris() {
+  if (tetrisState !== "playing" || !tetrisPiece) {
+    return;
+  }
+
+  const rotated = tetrisPiece.matrix[0].map((_, index) =>
+    tetrisPiece.matrix.map((row) => row[index]).reverse(),
+  );
+  // Wall kicks first, then a small upward kick so rotation still works when
+  // the piece is resting on the floor.
+  const kicks = [
+    { x: 0, y: 0 },
+    { x: -1, y: 0 },
+    { x: 1, y: 0 },
+    { x: -2, y: 0 },
+    { x: 2, y: 0 },
+    { x: 0, y: -1 },
+    { x: -1, y: -1 },
+    { x: 1, y: -1 },
+    { x: 0, y: -2 },
+    { x: -1, y: -2 },
+    { x: 1, y: -2 },
+    { x: 0, y: -3 },
+  ];
+
+  for (const kick of kicks) {
+    const nextX = tetrisPiece.x + kick.x;
+    const nextY = tetrisPiece.y + kick.y;
+
+    if (!tetrisCollides(rotated, nextX, nextY)) {
+      tetrisPiece.matrix = rotated;
+      tetrisPiece.x = nextX;
+      tetrisPiece.y = nextY;
+      drawTetrisBoard();
+      return;
+    }
+  }
+}
+
+function hardDropTetris() {
+  if (tetrisState !== "playing" || !tetrisPiece) {
+    return;
+  }
+
+  let distance = 0;
+
+  while (!tetrisCollides(tetrisPiece.matrix, tetrisPiece.x, tetrisPiece.y + 1)) {
+    tetrisPiece.y += 1;
+    distance += 1;
+  }
+
+  tetrisScoreValue += distance * 2;
+  updateTetrisScore();
+  lockTetrisPiece();
+  drawTetrisBoard();
+}
+
+function stopTetrisTimer() {
+  window.clearTimeout(tetrisTimer);
+  tetrisTimer = undefined;
+}
+
+function tetrisDropDelay() {
+  return Math.max(120, 720 - (tetrisLevel - 1) * 70);
+}
+
+function scheduleTetrisTick() {
+  window.clearTimeout(tetrisTimer);
+
+  if (tetrisState !== "playing") {
+    return;
+  }
+
+  tetrisTimer = window.setTimeout(() => {
+    if (tetrisState !== "playing") {
+      return;
+    }
+
+    moveTetrisDown();
+    scheduleTetrisTick();
+  }, tetrisDropDelay());
+}
+
+function startTetrisGame() {
+  stopTetrisTimer();
+  tetrisGrid = createTetrisGrid();
+  tetrisBag = [];
+  tetrisPiece = null;
+  tetrisScoreValue = 0;
+  tetrisLines = 0;
+  tetrisLevel = 1;
+  tetrisState = "playing";
+  updateTetrisScore();
+  tetrisStart.textContent = "Restart game";
+  tetrisStatus.textContent = "Arrow keys move and rotate. Space drops the piece.";
+  spawnTetrisPiece();
+  drawTetrisBoard();
+  scheduleTetrisTick();
+  reflectGameState();
+}
+
+function finishTetrisGame() {
+  stopTetrisTimer();
+  tetrisState = "over";
+  tetrisStart.textContent = "Play again";
+  tetrisStatus.textContent = `Game over. Final score: ${tetrisScoreValue}.`;
+  reflectGameState();
+}
+
+function pauseTetrisGame() {
+  if (tetrisState !== "playing") {
+    return;
+  }
+
+  stopTetrisTimer();
+  tetrisState = "paused";
+  tetrisStart.textContent = "Resume";
+  tetrisStatus.textContent = "Paused. Press resume to keep playing.";
+  reflectGameState();
+}
+
+function resumeTetrisGame() {
+  if (tetrisState !== "paused") {
+    return;
+  }
+
+  tetrisState = "playing";
+  tetrisStart.textContent = "Restart game";
+  tetrisStatus.textContent = "Arrow keys move and rotate. Space drops the piece.";
+  scheduleTetrisTick();
+  reflectGameState();
+}
+
+function selectGame(name) {
+  if ((name !== "snake" && name !== "tetris") || name === activeGame) {
+    return;
+  }
+
+  if (activeGame === "snake") {
+    pauseSnakeGame();
+  } else {
+    pauseTetrisGame();
+  }
+
+  activeGame = name;
+  gameWidget.dataset.game = name;
+
+  gamePanels.forEach((panel) => {
+    panel.hidden = panel.dataset.gamePanel !== name;
+  });
+
+  gameSwitchButtons.forEach((button) => {
+    const selected = button.dataset.gameChoice === name;
+    button.classList.toggle("is-selected", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+
+  reflectGameState();
+}
+
+snakeStart.addEventListener("click", () => {
+  if (snakeState === "paused") {
+    resumeSnakeGame();
+  } else {
+    startSnakeGame();
+  }
+
+  snakeBoard.focus({ preventScroll: true });
 });
 
 snakeDirectionButtons.forEach((button) => {
-  button.addEventListener("click", () => setSnakeDirection(button.dataset.direction));
+  button.addEventListener("click", () => {
+    setSnakeDirection(button.dataset.direction);
+    snakeBoard.focus({ preventScroll: true });
+  });
+});
+
+tetrisStart.addEventListener("click", () => {
+  if (tetrisState === "paused") {
+    resumeTetrisGame();
+  } else {
+    startTetrisGame();
+  }
+
+  tetrisBoard.focus({ preventScroll: true });
+});
+
+tetrisButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const action = button.dataset.tetris;
+
+    if (action === "left") {
+      moveTetris(-1, 0);
+    } else if (action === "right") {
+      moveTetris(1, 0);
+    } else if (action === "down") {
+      moveTetrisDown(true);
+    } else if (action === "rotate") {
+      rotateTetris();
+    } else if (action === "drop") {
+      hardDropTetris();
+    }
+
+    tetrisBoard.focus({ preventScroll: true });
+  });
+});
+
+const gameKeyDirections = {
+  arrowup: "up",
+  w: "up",
+  arrowdown: "down",
+  s: "down",
+  arrowleft: "left",
+  a: "left",
+  arrowright: "right",
+  d: "right",
+};
+
+/*
+ * Listen on the whole widget, not only on the canvas. After a player taps an
+ * on-screen control, focus sits on that button; a canvas-only listener made
+ * the keyboard go dead until the board was clicked again. Space/Enter on a
+ * real button still activates that button.
+ */
+function handleGameKeydown(event) {
+  if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) {
+    return;
+  }
+
+  const key = event.key.toLowerCase();
+
+  if (activeGame === "snake") {
+    const direction = gameKeyDirections[key];
+
+    if (!direction || snakeState !== "playing") {
+      return;
+    }
+
+    event.preventDefault();
+    setSnakeDirection(direction);
+    return;
+  }
+
+  if (activeGame !== "tetris" || tetrisState !== "playing") {
+    return;
+  }
+
+  const focusedButton =
+    event.target && event.target.closest
+      ? event.target.closest("button")
+      : null;
+
+  if ((key === " " || key === "enter") && focusedButton) {
+    return;
+  }
+
+  let handled = true;
+
+  if (key === "arrowleft" || key === "a") {
+    moveTetris(-1, 0);
+  } else if (key === "arrowright" || key === "d") {
+    moveTetris(1, 0);
+  } else if (key === "arrowdown" || key === "s") {
+    moveTetrisDown(true);
+  } else if (key === "arrowup" || key === "w") {
+    rotateTetris();
+  } else if (event.code === "Space" || key === " ") {
+    hardDropTetris();
+  } else {
+    handled = false;
+  }
+
+  if (handled) {
+    event.preventDefault();
+  }
+}
+
+gameWidget.addEventListener("keydown", handleGameKeydown);
+
+snakeBoard.addEventListener("click", () => {
+  snakeBoard.focus({ preventScroll: true });
+});
+
+tetrisBoard.addEventListener("click", () => {
+  tetrisBoard.focus({ preventScroll: true });
+});
+
+gameSwitchButtons.forEach((button) => {
+  button.addEventListener("click", () => selectGame(button.dataset.gameChoice));
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    return;
+  }
+
+  if (activeGame === "snake") {
+    pauseSnakeGame();
+  } else {
+    pauseTetrisGame();
+  }
 });
 
 drawSnakeBoard();
+drawTetrisBoard();
 
 const pictureGrid = document.querySelector(".about-photo-grid");
 const galleryMemory = document.querySelector(".gallery-memory");
